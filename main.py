@@ -102,21 +102,63 @@ plt.legend(title='Season')
 
 plt.show()
 
-
-# Assuming you have information about recession periods in the 'Recession' column
-# You may need to adjust this condition based on your actual dataset
-recession_condition = df['Recession'] == 1
-
-# Assuming 'Vehicle_Type' is the correct column name, modify it accordingly
-countplot_data = df.loc[recession_condition, ['Vehicle_Type', 'Unemployment_Rate']]
-
-# Create a countplot
-plt.figure(figsize=(12, 8))
-sns.countplot(x='Vehicle_Type', hue='Unemployment_Rate', data=countplot_data)
+# Assuming you have a column named 'Consumer_Confidence'
+plt.figure(figsize=(10, 6))
+plt.scatter(x=df.loc[recession_condition, 'Consumer_Confidence'],
+            y=df.loc[recession_condition, 'Automobile_Sales'],
+            alpha=0.7,  # Adjust transparency
+            c='blue',   # Color of points
+            marker='o') # Marker style
 
 # Add labels and title
-plt.xlabel('Vehicle Type')
-plt.ylabel('Count')
-plt.title('Effect of Unemployment Rate on Vehicle Type and Sales During Recession')
+plt.xlabel('Consumer Confidence')
+plt.ylabel('Automobile Sales')
+plt.title('Correlation Between Consumer Confidence and Sales During Recession')
+
+plt.show()
+
+import matplotlib.pyplot as plt
+
+# Assuming you have a column named 'Advertising_Expenditure' and 'Recession'
+advertising_expenditure_recession = df.loc[df['Recession'] == 1, 'Advertising_Expenditure'].sum()
+advertising_expenditure_non_recession = df.loc[df['Recession'] == 0, 'Advertising_Expenditure'].sum()
+
+# Data for the pie chart
+labels = ['Recession', 'Non-Recession']
+sizes = [advertising_expenditure_recession, advertising_expenditure_non_recession]
+colors = ['red', 'green']  # You can choose your own colors
+
+# Create a pie chart
+plt.figure(figsize=(8, 8))
+plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+
+# Add title
+plt.title('Advertising Expenditure Distribution During Recession vs Non-Recession')
+
+plt.show()
+
+
+import matplotlib.pyplot as plt
+
+# Assuming you have columns named 'Vehicle_Type', 'Advertising_Expenditure', and 'Recession'
+recession_condition = df['Recession'] == 1
+
+# Filter data for recession period
+df_recession = df[recession_condition]
+
+# Group by 'Vehicle_Type' and calculate total advertising expenditure for each type
+df_grouped = df_recession.groupby('Vehicle_Type')['Advertising_Expenditure'].sum()
+
+# Data for the pie chart
+labels = df_grouped.index
+sizes = df_grouped.values
+colors = plt.cm.viridis.colors  # You can choose your own colors
+
+# Create a pie chart
+plt.figure(figsize=(8, 8))
+plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+
+# Add title
+plt.title('Total Advertising Expenditure by Vehicle Type During Recession')
 
 plt.show()
